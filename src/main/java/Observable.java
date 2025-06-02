@@ -3,10 +3,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * Class representing an Observable in the Observer pattern.
- * @param <T> The type of items being emitted
- */
+/// Класс, представляющий Observable в паттерне Наблюдатель.
+/// @param <T> - тип элементов, которые отправляются
 public class Observable<T> {
     private final Consumer<Observer<T>> source;
 
@@ -14,21 +12,17 @@ public class Observable<T> {
         this.source = source;
     }
 
-    /**
-     * Creates a new Observable from a source function.
-     * @param source The function that defines how the Observable emits items
-     * @param <T> The type of items being emitted
-     * @return A new Observable instance
-     */
+    /// Создаёт новый Observable из функции-источника.
+    /// @param source Функция, которая определяет, как Observable отправляет элементы
+     /// @param <T> - тип элементов, которые отправляются
+     /// возвращает новый экземпляр Observable
     public static <T> Observable<T> create(Consumer<Observer<T>> source) {
         return new Observable<>(source);
     }
 
-    /**
-     * Subscribes an Observer to this Observable and returns a Disposable.
-     * @param observer The Observer to subscribe
-     * @return A Disposable that can be used to cancel the subscription
-     */
+    /// Подписывает Observer на этот Observable и возвращает Disposable.
+    /// @param observer - Observer для подписки
+     /// возвращает Disposable, который можно использовать для отмены подписки
     public Disposable subscribe(Observer<T> observer) {
         AtomicBoolean disposed = new AtomicBoolean(false);
         try {
@@ -72,13 +66,11 @@ public class Observable<T> {
         };
     }
 
-    /**
-     * Subscribes to this Observable with callbacks for onNext, onError, and onComplete.
-     * @param onNext The callback for handling emitted items
-     * @param onError The callback for handling errors
-     * @param onComplete The callback for handling completion
-     * @return A Disposable that can be used to cancel the subscription
-     */
+    /// Подписывается на этот Observable.
+    /// @param onNext для обработки отправленных элементов
+     /// @param onError для обработки ошибок
+     /// @param onComplete для обработки завершения
+     /// возвращает Disposable, который можно использовать для отмены подписки
     public Disposable subscribe(Consumer<T> onNext, Consumer<Throwable> onError, Runnable onComplete) {
         return subscribe(new Observer<T>() {
             @Override
@@ -98,12 +90,10 @@ public class Observable<T> {
         });
     }
 
-    /**
-     * Transforms the items emitted by this Observable by applying a function to each item.
-     * @param mapper The function to apply to each item
-     * @param <R> The type of items emitted by the resulting Observable
-     * @return A new Observable that emits the transformed items
-     */
+    /// Преобразует элементы, отправляемые этим Observable, применяя функцию к каждому элементу.
+    /// @param mapper Функция для преобразования каждого элемента
+     /// @param <R> Тип элементов, отправляемых новым Observable
+     /// возвращает новый Observable, отправляющий преобразованные элементы
     public <R> Observable<R> map(Function<T, R> mapper) {
         return new Observable<>(observer -> subscribe(
                 item -> {
@@ -118,11 +108,9 @@ public class Observable<T> {
         ));
     }
 
-    /**
-     * Filters items emitted by this Observable by only emitting those that satisfy a predicate.
-     * @param predicate The predicate to apply to each item
-     * @return A new Observable that emits only those items that satisfy the predicate
-     */
+    /// Фильтрует элементы, отправляемые этим Observable, отправляя только те, которые удовлетворяют условию.
+    /// @param predicate для проверки каждого элемента
+     /// возвращает новый Observable, отправляющий только элементы, прошедшие проверку
     public Observable<T> filter(Predicate<T> predicate) {
         return new Observable<>(observer -> subscribe(
                 item -> {
@@ -139,12 +127,10 @@ public class Observable<T> {
         ));
     }
 
-    /**
-     * Transforms the items emitted by this Observable into Observables, then flattens the emissions from those into a single Observable.
-     * @param mapper A function that returns an Observable for each item emitted by the source Observable
-     * @param <R> The type of items emitted by the resulting Observable
-     * @return A new Observable that emits the items emitted by the Observables returned by the mapper function
-     */
+    /// Преобразует элементы этого Observable в другие Observable, затем объединяет их отправляемые элементы в один поток.
+    /// @param mapper - функция, возвращающая Observable для каждого элемента исходного Observable
+     /// @param <R> - тип элементов, отправляемых новым Observable
+     /// возвращает новый Observable, отправляющий элементы из всех Observable, возвращённых функцией mapper
     public <R> Observable<R> flatMap(Function<T, Observable<R>> mapper) {
         return new Observable<>(observer -> {
             AtomicBoolean disposed = new AtomicBoolean(false);
@@ -156,7 +142,7 @@ public class Observable<T> {
                                 innerObservable.subscribe(
                                         observer::onNext,
                                         observer::onError,
-                                        () -> {} // Don't complete when inner completes
+                                        () -> {} // Не завершать при завершении вложенного Observable
                                 );
                             } catch (Exception e) {
                                 observer.onError(e);
@@ -169,20 +155,16 @@ public class Observable<T> {
         });
     }
 
-    /**
-     * Specifies the Scheduler on which an Observable will operate.
-     * @param scheduler The Scheduler to use
-     * @return A new Observable that operates on the specified Scheduler
-     */
+    /// Указывает Scheduler, на котором будет выполняться этот Observable.
+    /// @param scheduler - scheduler для использования
+     /// возвращает новый Observable, работающий на указанном Scheduler
     public Observable<T> subscribeOn(Scheduler scheduler) {
         return new Observable<>(observer -> scheduler.execute(() -> subscribe(observer)));
     }
 
-    /**
-     * Specifies the Scheduler on which an Observer will observe this Observable.
-     * @param scheduler The Scheduler to use
-     * @return A new Observable that is observed on the specified Scheduler
-     */
+    /// Указывает Scheduler, на котором Observer будет наблюдать за этим Observable.
+    /// @param scheduler - scheduler для использования
+     /// возвращает новый Observable, который отслеживается на указанном Scheduler
     public Observable<T> observeOn(Scheduler scheduler) {
         return new Observable<>(observer -> subscribe(
                 item -> scheduler.execute(() -> observer.onNext(item)),

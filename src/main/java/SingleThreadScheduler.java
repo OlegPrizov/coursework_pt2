@@ -1,10 +1,8 @@
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * Scheduler that uses a single thread for sequential operations.
- * Similar to RxJava's Schedulers.single().
- */
+/// Планировщик, использующий один поток для последовательного выполнения операций.
+/// Аналог Schedulers.single() из RxJava.
 public class SingleThreadScheduler implements Scheduler {
     private final ExecutorService executor;
 

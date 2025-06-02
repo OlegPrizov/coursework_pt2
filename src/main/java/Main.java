@@ -1,11 +1,9 @@
 public class Main {
     public static void main(String[] args) {
-        // Create schedulers
         IOThreadScheduler ioScheduler = new IOThreadScheduler();
         ComputationScheduler computationScheduler = new ComputationScheduler();
         SingleThreadScheduler singleThreadScheduler = new SingleThreadScheduler();
 
-        // Example 1: Using flatMap to transform and flatten
         System.out.println("\nExample 1: Using flatMap");
         Observable<Integer> numbers = Observable.create(observer -> {
             try {
@@ -21,7 +19,6 @@ public class Main {
         Disposable disposable = numbers
                 .flatMap(number -> Observable.create(observer -> {
                     try {
-                        // Simulate some work
                         Thread.sleep(100);
                         observer.onNext(number * 10);
                         observer.onNext(number * 20);
@@ -36,7 +33,6 @@ public class Main {
                         () -> System.out.println("FlatMap completed!")
                 );
 
-        // Example 2: Error handling
         System.out.println("\nExample 2: Error handling");
         Observable.create(observer -> {
                     try {
@@ -53,7 +49,6 @@ public class Main {
                         () -> System.out.println("This won't be called due to error")
                 );
 
-        // Example 3: Disposable usage
         System.out.println("\nExample 3: Disposable usage");
         Observable<Integer> infinite = Observable.create(observer -> {
             int i = 0;
@@ -76,7 +71,6 @@ public class Main {
                         () -> System.out.println("This won't be called")
                 );
 
-        // Wait for a while and then dispose
         try {
             Thread.sleep(500);
             infiniteDisposable.dispose();
@@ -85,7 +79,6 @@ public class Main {
             e.printStackTrace();
         }
 
-        // Wait for all operations to complete
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {

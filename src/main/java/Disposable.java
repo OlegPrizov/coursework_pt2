@@ -1,15 +1,8 @@
-/**
- * Interface representing a disposable resource that can be used to cancel a subscription.
- */
+/// Интерфейс, который представляет собой освобождаемый ресурс, который можно использовать для отмены подписки.
 public interface Disposable {
-    /**
-     * Disposes the resource, the operation should be idempotent.
-     */
+    /// Освобождает ресурс. Повторные вызовы не оказывают эффекта.
     void dispose();
 
-    /**
-     * Returns true if this resource has been disposed.
-     * @return true if this resource has been disposed
-     */
+    /// Возвращает true, если ресурс был освобождён.
     boolean isDisposed();
 }

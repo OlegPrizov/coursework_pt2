@@ -1,22 +1,14 @@
-/**
- * Interface representing an Observer in the Observer pattern.
- * @param <T> The type of items being observed
- */
+/// Интерфейс, представляющий Наблюдателя в паттерне Наблюдатель.
+/// @param <T> - тип объектов, за которыми ведётся наблюдение
 public interface Observer<T> {
-    /**
-     * Called when the Observable emits an item.
-     * @param item The item emitted by the Observable
-     */
+    /// Получает элементы потока.
+    /// @param item - элемент, отправленный Observable
     void onNext(T item);
 
-    /**
-     * Called when the Observable encounters an error.
-     * @param t The error that occurred
-     */
+    /// Обрабатывает ошибки
+    /// @param t - ошибка, которая произошла
     void onError(Throwable t);
 
-    /**
-     * Called when the Observable has completed emitting items.
-     */
+    /// Вызывается при завершении потока
     void onComplete();
 }

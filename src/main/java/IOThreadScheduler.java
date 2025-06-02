@@ -1,10 +1,8 @@
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * Scheduler that uses a cached thread pool for I/O operations.
- * Similar to RxJava's Schedulers.io().
- */
+/// Планировщик, использующий кэшируемый пул потоков для операций ввода-вывода.
+/// Аналог Schedulers.io() из RxJava.
 public class IOThreadScheduler implements Scheduler {
     private final ExecutorService executor;
 

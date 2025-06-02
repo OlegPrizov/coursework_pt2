@@ -1,10 +1,5 @@
-/**
- * Interface for scheduling tasks to be executed on different threads.
- */
+/// Интерфейс для планирования выполнения задач в разных потоках.
 public interface Scheduler {
-    /**
-     * Schedules a task for execution.
-     * @param task The task to be executed
-     */
+    /// @param task Задача, которая должна быть выполнена
     void execute(Runnable task);
 }
